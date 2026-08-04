@@ -46,27 +46,12 @@ class User(Base):
     telegram_id: Mapped[int] = mapped_column(BigInteger, unique=True)
     username: Mapped[str | None] = mapped_column(String(255))
     first_name: Mapped[str] = mapped_column(String(255))
-    subscription_plan: Mapped[SubscriptionPlan] = mapped_column(
-        sa.Enum(SubscriptionPlan, name="subscriptionplan"),
-        default=SubscriptionPlan.FREE,
-        server_default=SubscriptionPlan.FREE.value,
-    )
+    subscription_plan: Mapped[SubscriptionPlan] = mapped_column(sa.Enum(SubscriptionPlan, name="subscriptionplan", values_callable=lambda obj: [e.value for e in obj]), default=SubscriptionPlan.FREE, server_default=SubscriptionPlan.FREE.value )
     subscription_started_at: Mapped[datetime | None]
     subscription_until: Mapped[datetime | None]
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime,
-        nullable=False,
-        default=datetime.utcnow,
-        server_default=sa.text("CURRENT_TIMESTAMP"),
-    )
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime,
-        nullable=False,
-        default=datetime.utcnow,
-        onupdate=datetime.utcnow,
-        server_default=sa.text("CURRENT_TIMESTAMP"),
-        server_onupdate=sa.text("CURRENT_TIMESTAMP"),
-    )
+    created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=datetime.utcnow, server_default=sa.text("CURRENT_TIMESTAMP"))
+    updated_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow, server_default=sa.text("CURRENT_TIMESTAMP"), server_onupdate=sa.text("CURRENT_TIMESTAMP"),)
+    tz: Mapped[str | None]=mapped_column(String, default=None)
     
 
 
@@ -81,20 +66,8 @@ class UserSettings(Base):
     profile_description: Mapped[str | None] = mapped_column(Text)
     weekly_schedule_json: Mapped[dict | None] = mapped_column(JSON)
     notifications_enabled: Mapped[bool] = mapped_column(Boolean, default=True, server_default=sa.true())
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime,
-        nullable=False,
-        default=datetime.utcnow,
-        server_default=sa.text("CURRENT_TIMESTAMP"),
-    )
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime,
-        nullable=False,
-        default=datetime.utcnow,
-        onupdate=datetime.utcnow,
-        server_default=sa.text("CURRENT_TIMESTAMP"),
-        server_onupdate=sa.text("CURRENT_TIMESTAMP"),
-    )
+    created_at: Mapped[datetime] = mapped_column( DateTime, nullable=False, default=datetime.utcnow, server_default=sa.text("CURRENT_TIMESTAMP"))
+    updated_at: Mapped[datetime] = mapped_column( DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow, server_default=sa.text("CURRENT_TIMESTAMP"), server_onupdate=sa.text("CURRENT_TIMESTAMP"))
     
 
 
@@ -131,7 +104,7 @@ class Project(Base):
     title: Mapped[str] = mapped_column(String(255))
     description: Mapped[str | None] = mapped_column(Text)
     status: Mapped[ProjectStatus] = mapped_column(
-        sa.Enum(ProjectStatus, name="projectstatus"),
+        sa.Enum(ProjectStatus, name="projectstatus", values_callable=lambda obj: [e.value for e in obj]),
         default=ProjectStatus.ACTIVE,
         server_default=ProjectStatus.ACTIVE.value,
     )
@@ -163,20 +136,20 @@ class Task(Base):
     title: Mapped[str] = mapped_column(String(255))
     description: Mapped[str | None] = mapped_column(Text)
     priority: Mapped[Priority] = mapped_column(
-        sa.Enum(Priority, name="priority"),
+        sa.Enum(Priority, name="priority", values_callable=lambda obj: [e.value for e in obj]),
         default=Priority.MEDIUM,
         server_default=Priority.MEDIUM.value,
     )
     estimated_duration: Mapped[int | None] = mapped_column(Integer)
     deadline: Mapped[datetime | None] = mapped_column(DateTime)
     kind: Mapped[TaskKind] = mapped_column(
-        sa.Enum(TaskKind, name="taskkind"),
+        sa.Enum(TaskKind, name="taskkind", values_callable=lambda obj: [e.value for e in obj]),
         default=TaskKind.TASK,
         server_default=TaskKind.TASK.value,
     )
     is_flexible: Mapped[bool] = mapped_column(Boolean, default=True, server_default=sa.true())
     status: Mapped[TaskStatus] = mapped_column(
-        sa.Enum(TaskStatus, name="taskstatus"),
+        sa.Enum(TaskStatus, name="taskstatus", values_callable=lambda obj: [e.value for e in obj]),
         default=TaskStatus.TODO,
         server_default=TaskStatus.TODO.value,
     )
