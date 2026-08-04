@@ -5,6 +5,12 @@ from sqlalchemy.ext.asyncio import create_async_engine
 from alembic import context
 from app.core.config import settings
 from app.db.base import Base
+import sys
+from pathlib import Path
+
+# Добавляем корень проекта (backend/) в sys.path
+project_root = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(project_root))
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
