@@ -11,6 +11,11 @@ class UserService:
         async with session_factory() as session:
             result = await session.execute(select(User).where(User.telegram_id==tg_id))
             return result.scalar_one_or_none()
+    @staticmethod
+    async def get_user_by_id(user_id: int) -> User | None:
+        async with session_factory() as session:
+            result = await session.execute(select(User).where(User.id==user_id))
+            return result.scalar_one_or_none()
 
     @staticmethod
     async def create_user(tg_id: int, username: str | None, first_name: str | None) -> User:
