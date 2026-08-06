@@ -1,14 +1,15 @@
 from datetime import datetime, timezone
+from typing import Any
 from sqlalchemy import select, update
 from sqlalchemy.exc import IntegrityError
-from app.schemas.task import TaskCreate
-from app.db.base import User, Task, Project
+from app.schemas.task import TaskCreate, TaskUpdate
+from app.db.base import Task, Project
 from app.db.session import session_factory
-from uuid import UUID
 
 
 def get_task_service():
     return TaskService()
+
 
 class TaskService:
     @staticmethod
@@ -33,7 +34,7 @@ class TaskService:
                 is_flexible=task.is_flexible,
                 created_at=datetime.utcnow(),
                 updated_at=datetime.utcnow()
-            )                       
+            )
 
             session.add(new_task)
             try:
@@ -52,18 +53,15 @@ class TaskService:
             return value.astimezone(timezone.utc).replace(tzinfo=None)
         return value
 
-
     @staticmethod
-    async def get_task(us_id: int, task_id: int)-> Task | None:
+    async def get_task(us_id: int, task_id: int) -> Task | None:
         async with session_factory() as session:
-            result = await session.execute(select(Task).where(Task.user_id==us_id,
-                                                              Task.id==task_id,
-                                                              Task.deleted_at.is_(None)))
+            result = await session.execute(select(Task).where(Task.user_id == us_id, Task.id == task_id, Task.deleted_at.is_(None)))
             return result.scalar_one_or_none()
 
     @staticmethod
-    async def update_task(us_id: int, task_id: int, task_data) -> Task:
-        update_data = {
+    async def update_task(us_id: int, task_id: int, task_data: TaskUpdate) -> Task:
+        update_data: dict[str, Any] = {
             key: value
             for key, value in task_data.model_dump().items()
             if key in task_data.model_fields_set
@@ -99,14 +97,12 @@ class TaskService:
             return existing
 
     @staticmethod
-    async def soft_delete_task(us_id: int, task_id: int):
+    async def soft_delete_task(us_id: int, task_id: int) -> Task:
         async with session_factory() as session:
-            res = await session.execute(select(Task).where(
-                Task.id==task_id, Task.user_id==us_id
-            ))
+            res = await session.execute(select(Task).where(Task.id == task_id, Task.user_id == us_id))
             exis = res.scalar_one_or_none()
-            if exis is  None:
-                raise ValueError("task not found")
+            if exis is None:
+                raise ValueError("Task not found")
             await session.execute(
                 update(Task)
                 .where(Task.user_id == us_id, Task.id == task_id)
@@ -116,24 +112,23 @@ class TaskService:
                 await session.commit()
             except IntegrityError:
                 await session.rollback()
-                raise ValueError("Task update failed due to integrity error.")
+                raise ValueError("Task soft delete failed due to integrity error.")
             await session.refresh(exis)
             return exis
+
     @staticmethod
-    async def harsh_delete_task(us_id: int, task_id: int):
+    async def harsh_delete_task(us_id: int, task_id: int) -> dict[str, int | bool]:
         async with session_factory() as session:
-            res = await session.execute(select(Task).where(
-                Task.id==task_id, Task.user_id==us_id, Task.deleted_at.is_not(None)
-            ))
+            res = await session.execute(select(Task).where(Task.id == task_id, Task.user_id == us_id, Task.deleted_at.is_not(None)))
             exs = res.scalar_one_or_none()
             if exs is None:
-                raise ValueError("soft deleted task not found")
+                raise ValueError("Soft deleted task not found")
             await session.delete(exs)
             try:
                 await session.commit()
-            except Exception:
+            except IntegrityError:
                 await session.rollback()
-                raise ValueError("failed")
+                raise ValueError("Task deletion failed due to integrity error.")
             return {"task_id": task_id, "deleted": True}
 
     @staticmethod
@@ -142,4 +137,3 @@ class TaskService:
             result = await session.execute(select(Project).where(Project.user_id == user_id, Project.id == project_id))
             return result.scalar_one_or_none()
 
-    
