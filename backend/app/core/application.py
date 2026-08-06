@@ -8,8 +8,9 @@ def register_routers(app: FastAPI):
     app.include_router(health.router)
     app.include_router(users.router)
     app.include_router(tasks.router)
-    
-    
+    app.include_router(categories.router)
+    app.include_router(projects.router)
+
 
 def create_app() -> FastAPI:
     app = FastAPI()
