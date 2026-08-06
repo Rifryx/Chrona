@@ -17,7 +17,7 @@ async def start_chat(msg: Message, user: User, is_new_user: bool):
             reply_markup=tz_keyboard())
     else:
         await msg.answer_photo(photo=get_photo("start"),
-            caption=f"Привет, {user.first_name}!")
+            caption=f"Привет, {user.first_name}! твой айди  {user.id}")
 
 
 @router.callback_query(F.data.startswith("tz:"))
