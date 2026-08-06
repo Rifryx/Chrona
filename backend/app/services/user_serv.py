@@ -35,12 +35,12 @@ class UserService:
         user = await UserService.get_user(tg_id)
         if user is not None:
             return user, False
-        try: 
+        try:
             return await UserService.create_user(tg_id, username, first_name), True
-        except IntegrityError:
+        except (IntegrityError, ValueError):
             existing = await UserService.get_user(tg_id)
             if existing is None:
-                raise ValueError("User with this telegram_id already exists.")
+                raise
             return existing, False
     @staticmethod
     async def get_tg_id(user_id: int) -> int | None:
