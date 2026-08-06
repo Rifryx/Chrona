@@ -33,7 +33,7 @@ async def create_task(
     Task: TaskCreate, 
     service: TaskService = Depends(get_task_service)
     ):
-    await service.create_task(us_id=us_id, task=Task)
+    return await service.create_task(us_id=us_id, task=Task)
 
 @router.patch("/user/{us_id}/task/{task_id}", tags=["tasks"])
 async def update_task(
@@ -53,7 +53,7 @@ async def get_task_mh(
     res = await service.get_task(us_id=us_id, task_id=task_id)
     return get_task_helper(res)
 
-@router.delete("/user/{us_id}/task/{task_id}", tags=["delete"])
+@router.delete("/user/{us_id}/task/{task_id}", tags=["tasks"])
 async def soft_delete_mh(us_id: int, task_id: int, service: TaskService = Depends(get_task_service)):
     res = await service.soft_delete_task(us_id=us_id, task_id=task_id)
     return res
