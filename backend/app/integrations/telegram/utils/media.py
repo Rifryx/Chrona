@@ -3,7 +3,8 @@ from aiogram.types import FSInputFile, InputMediaPhoto, InputMediaVideo
 
 
 media_dict = {
-    "start": "app/integrations/telegram/media/start.png"
+    "start": "app/integrations/telegram/media/start.png",
+    "success": "app/integrations/telegram/media/success.png"
 }
 
 def get_photo(key: str)->FSInputFile:

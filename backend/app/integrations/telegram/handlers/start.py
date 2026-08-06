@@ -29,8 +29,9 @@ async def pick_tz_start(call: CallbackQuery):
         await call.answer("Неизвестный пояс, попробуй ещё раз", show_alert=True)
         return
     await UserService.set_tz(call.from_user.id, iana)
-    await call.message.edit_caption(
-        caption="Часовой пояс сохранён. Теперь ты можешь пользоваться ботом.",
+    await call.message.edit_media(media=InputMediaPhoto(
+        media=get_photo("success"),
+        caption="Часовой пояс сохранён. Теперь ты можешь пользоваться ботом."),
         reply_markup=None
     )
     await call.answer()
