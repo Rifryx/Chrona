@@ -11,4 +11,4 @@ DATABASE.md
 .pytest_cache/
 .uv-cache/
 __pycache__/
-
+clear_file.py
