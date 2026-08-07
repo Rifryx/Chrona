@@ -18,7 +18,6 @@ async def get_user(telegram_id: int):
             "subscription_until": user.subscription_until,
             "created_at": user.created_at,
             "updated_at": user.updated_at,
-            "tz": user.tz
         }
 
 @router.get('/user/id/{user_id}', tags=["users"])
@@ -37,5 +36,4 @@ async def get_user_by_id(user_id: int):
             "subscription_until": user.subscription_until,
             "created_at": user.created_at,
             "updated_at": user.updated_at,
-            "tz": user.tz
         }
