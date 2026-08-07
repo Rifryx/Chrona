@@ -51,7 +51,7 @@ class User(Base):
     subscription_until: Mapped[datetime | None]
     created_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=datetime.utcnow, server_default=sa.text("CURRENT_TIMESTAMP"))
     updated_at: Mapped[datetime] = mapped_column(DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow, server_default=sa.text("CURRENT_TIMESTAMP"), server_onupdate=sa.text("CURRENT_TIMESTAMP"),)
-    tz: Mapped[str | None]=mapped_column(String, default=None)
+
     
 
 
