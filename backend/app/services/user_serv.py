@@ -62,18 +62,3 @@ class UserService:
             result = await session.execute(select(User.telegram_id).where(User.id == user_id))
             return result.scalar_one_or_none()
 
-    @staticmethod
-    async def set_tz(tg_id: int, tz: str) -> None:
-        async with session_factory() as session:
-            await session.execute(
-                update(User)
-                .where(User.telegram_id == tg_id)
-                .values(tz=tz, updated_at=datetime.utcnow())
-            )
-            await session.commit()
-
-    @staticmethod
-    async def get_tz(tg_id: int) -> str | None:
-        async with session_factory() as session:
-            result = await session.execute(select(User.tz).where(User.telegram_id == tg_id))
-            return result.scalar_one_or_none()
