@@ -10,6 +10,7 @@ def register_routers(app: FastAPI):
     app.include_router(tasks.router)
     app.include_router(categories.router)
     app.include_router(projects.router)
+    app.include_router(settings.router)
 
 
 def create_app() -> FastAPI:
