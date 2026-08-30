@@ -26,12 +26,12 @@ function Navbar() {
         <span>Задачи</span>
       </NavLink>
 
-      <button className="add-btn">
+      <NavLink to="assistant" className="add-btn">
         <svg viewBox="0 0 24 24" fill="none">
           <path d="M12 5V19" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
           <path d="M5 12H19" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
         </svg>
-      </button>
+      </NavLink>
 
       <NavLink to="/plan" className={linkClass}>
         <svg viewBox="0 0 24 24" fill="none">
