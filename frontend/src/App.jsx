@@ -4,6 +4,7 @@ import Home from './pages/Home.jsx'
 import Tasks from './pages/Tasks.jsx'
 import Plan from './pages/Plan.jsx'
 import Profile from './pages/Profile.jsx'
+import Assistant from './pages/Assistant.jsx'
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/tasks" element={<Tasks />} />
+        <Route path="/assistant" element={<Assistant />} />
         <Route path="/plan" element={<Plan />} />
         <Route path="/profile" element={<Profile />} />
       </Routes>
